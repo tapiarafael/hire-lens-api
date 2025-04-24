@@ -5,6 +5,7 @@ import { Resume, resumes } from 'src/drizzle/tables/resumes';
 import { DrizzleDB } from 'src/drizzle/types/drizzle';
 import { STORAGE_SERVICE } from 'src/storage/storage.module';
 import { StorageService } from 'src/storage/storage.service';
+import { ResumeStatus } from './types/resume-status.enum';
 
 @Injectable()
 export class ResumeService {
@@ -27,14 +28,14 @@ export class ResumeService {
 
   async analyzeResume(file: Express.Multer.File) {
     const uploadedFile = await this.storageService.upload(file);
-    const resume = {
-      fileId: uploadedFile.id,
-      name: file.originalname,
-      size: file.size,
-      mimetype: file.mimetype,
-    };
 
-    const [data] = await this.db.insert(resumes).values(resume).returning();
+    const [data] = await this.db
+      .insert(resumes)
+      .values({
+        fileId: uploadedFile.id,
+        status: ResumeStatus.PENDING,
+      })
+      .returning();
 
     return data;
   }
