@@ -12,3 +12,5 @@ export const resumes = pgTable('resumes', {
   suggestions: jsonb('suggestions'),
   ...timestamps,
 });
+
+export type Resume = typeof resumes.$inferSelect;
