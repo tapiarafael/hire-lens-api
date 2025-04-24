@@ -1,0 +1,1 @@
+ALTER TABLE "resumes" ALTER COLUMN "status" SET DEFAULT 'pending';
