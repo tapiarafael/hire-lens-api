@@ -5,8 +5,10 @@ import { StorageProvider } from './types/storage-provider.enum';
 import { DRIZZLE, DrizzleModule } from 'src/drizzle/drizzle.module';
 import { DrizzleDB } from 'src/drizzle/types/drizzle';
 
+export const STORAGE_SERVICE = Symbol('storage-service');
+
 const storageProvider: Provider = {
-  provide: 'StorageService',
+  provide: STORAGE_SERVICE,
   inject: [ConfigService, DRIZZLE],
   useFactory: (configService: ConfigService, db: DrizzleDB) => {
     const provider = configService.get<StorageProvider>('STORAGE_PROVIDER');
@@ -22,6 +24,6 @@ const storageProvider: Provider = {
 @Module({
   imports: [ConfigModule, DrizzleModule],
   providers: [storageProvider],
-  exports: [storageProvider],
+  exports: [STORAGE_SERVICE],
 })
 export class StorageModule {}

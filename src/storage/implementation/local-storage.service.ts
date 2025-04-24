@@ -20,19 +20,25 @@ export class LocalStorageService implements StorageService {
   }
 
   async upload(file: Express.Multer.File): Promise<File> {
-    const filename = file.filename || file.originalname;
+    const uuid = crypto.randomUUID();
+    const ext = path.extname(file.originalname);
+    const filename = `${uuid}${ext}`;
     const targetPath = path.join(this.storagePath, filename);
 
-    await fs.mkdir(this.storagePath);
+    // Check if the directory exists, if not create it
+    if (!(await fs.stat(this.storagePath).catch(() => false))) {
+      await fs.mkdir(this.storagePath, { recursive: true });
+    }
     await fs.writeFile(targetPath, file.buffer);
 
     const [data] = await this.db
       .insert(files)
       .values({
-        originalName: filename,
+        id: uuid,
+        originalName: file.filename || file.originalname,
         size: file.size,
         mimetype: file.mimetype,
-        path: targetPath,
+        path: filename,
       })
       .returning();
 
