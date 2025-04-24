@@ -9,3 +9,5 @@ export const files = pgTable('files', {
   size: integer('size').notNull(),
   ...timestamps,
 });
+
+export type File = typeof files.$inferSelect;
