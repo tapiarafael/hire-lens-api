@@ -1,11 +1,16 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { AIRequest, AIService } from '../ai.service';
 import { ConfigService } from '@nestjs/config';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 export class AnthropicService implements AIService {
   private readonly anthropic: Anthropic;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectPinoLogger(AnthropicService.name)
+    private readonly logger: PinoLogger,
+  ) {
     const apiKey = configService.getOrThrow<string>('AI_API_KEY');
     this.anthropic = new Anthropic({ apiKey });
   }
@@ -17,6 +22,14 @@ export class AnthropicService implements AIService {
     maxTokens,
     systemInstructions,
   }: AIRequest): Promise<string> {
+    this.logger.debug({
+      msg: 'Calling Anthropic API',
+      model,
+      temperature,
+      maxTokens,
+      promptLength: prompt.length,
+    });
+
     const response = await this.anthropic.messages.create({
       model,
       system: systemInstructions,
@@ -40,8 +53,17 @@ export class AnthropicService implements AIService {
     // This could be better handled. At the moment
     // is mostly to satisfy the type checker
     if (response.content[0].type !== 'text') {
+      this.logger.error({
+        msg: 'Invalid response type from Anthropic API',
+        response,
+      });
       throw new Error('Invalid response type');
     }
+
+    this.logger.debug({
+      msg: 'Received Anthropic response',
+      responseLength: response.content[0].text.length,
+    });
 
     return response.content[0].text;
   }
