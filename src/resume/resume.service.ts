@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { Resume, resumes } from 'src/drizzle/tables/resumes';
@@ -21,14 +21,26 @@ export class ResumeService {
     private readonly resumeQueue: Queue,
   ) {}
 
-  async getResumeById(id: string): Promise<Resume | null> {
-    const result = await this.db
-      .select()
+  async getResumeById(id: string): Promise<Partial<Resume>> {
+    const [result] = await this.db
+      .select({
+        id: resumes.id,
+        status: resumes.status,
+        score: resumes.score,
+        suggestions: resumes.suggestions,
+        summary: resumes.summary,
+        createdAt: resumes.createdAt,
+        updatedAt: resumes.updatedAt,
+      })
       .from(resumes)
       .where(eq(resumes.id, id))
       .limit(1);
 
-    return result[0] || null;
+    if (!result) {
+      throw new NotFoundException('Resume not found');
+    }
+
+    return result;
   }
 
   async analyzeResume(file: Express.Multer.File) {
