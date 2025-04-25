@@ -4,6 +4,7 @@ import { StorageModule } from './storage/storage.module';
 import { ConfigModule } from '@nestjs/config';
 import { ResumeModule } from './resume/resume.module';
 import { LoggerModule } from 'nestjs-pino';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LoggerModule } from 'nestjs-pino';
     DrizzleModule,
     StorageModule,
     ResumeModule,
+    AiModule,
   ],
   controllers: [],
   providers: [],
