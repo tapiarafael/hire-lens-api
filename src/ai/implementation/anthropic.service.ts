@@ -15,11 +15,11 @@ export class AnthropicService implements AIService {
     prompt,
     temperature,
     maxTokens,
-    system,
+    systemInstructions,
   }: AIRequest): Promise<string> {
     const response = await this.anthropic.messages.create({
       model,
-      system,
+      system: systemInstructions,
       max_tokens:
         maxTokens ||
         this.configService.getOrThrow<number>('AI_MAX_TOKENS_DEFAULT'),

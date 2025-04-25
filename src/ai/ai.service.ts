@@ -2,7 +2,7 @@ export interface AIRequest {
   prompt: string;
   model: string;
   temperature?: number;
-  system?: string;
+  systemInstructions?: string;
   maxTokens?: number;
 }
 
