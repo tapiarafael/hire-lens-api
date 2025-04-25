@@ -5,7 +5,7 @@ import { AnthropicService } from './implementation/anthropic.service';
 import { OpenAIService } from './implementation/openai.service';
 import { PinoLogger } from 'nestjs-pino';
 
-const AI_SERVICE = Symbol('AI_SERVICE');
+export const AI_SERVICE = Symbol('AI_SERVICE');
 
 const aiProvider: Provider = {
   provide: AI_SERVICE,
