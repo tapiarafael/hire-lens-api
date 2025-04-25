@@ -1,4 +1,11 @@
-import { Injectable } from '@nestjs/common';
+export interface AIRequest {
+  prompt: string;
+  model: string;
+  temperature?: number;
+  system?: string;
+  maxTokens?: number;
+}
 
-@Injectable()
-export class AiService {}
+export interface AIService {
+  generateText(request: AIRequest): Promise<string>;
+}
