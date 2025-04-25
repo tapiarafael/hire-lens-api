@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, jsonb, integer } from 'drizzle-orm/pg-core';
 import { files } from './files';
 import { timestamps } from './helpers/columns';
 import { ResumeStatus } from 'src/resume/types/resume-status.enum';
@@ -8,9 +8,12 @@ export const resumes = pgTable('resumes', {
   fileId: uuid('file_id')
     .notNull()
     .references(() => files.id),
-  content: text('content'),
+  rawContent: text('raw_content').notNull(),
+  summary: text('summary'),
   status: text('status').default(ResumeStatus.PENDING),
   suggestions: jsonb('suggestions'),
+  score: integer('score'),
+  llmParams: jsonb('llm_params'),
   ...timestamps,
 });
 

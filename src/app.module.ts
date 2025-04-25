@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { DrizzleModule } from './drizzle/drizzle.module';
 import { StorageModule } from './storage/storage.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ResumeModule } from './resume/resume.module';
 import { LoggerModule } from 'nestjs-pino';
 import { AiModule } from './ai/ai.module';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -22,6 +23,15 @@ import { AiModule } from './ai/ai.module';
             }
           : {}),
       },
+    }),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.getOrThrow<string>('REDIS_URL'),
+          port: configService.getOrThrow<number>('REDIS_PORT'),
+        },
+      }),
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     DrizzleModule,
