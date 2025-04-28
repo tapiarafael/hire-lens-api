@@ -188,15 +188,12 @@ export class JobResumeProcessor extends WorkerHost {
 
               4. Identify specific strengths in the resume that align well with the job requirements.
 
-              5. Identify areas where the resume could be improved to better match the job description.
+              5. Identify areas where the user could improve to better match the job description. Put as action items inside the suggestions.
 
               6. Compile your findings into a JSON object with the following structure:
                 {
                   "score": number,
-                  "suggestions": [
-                    "Strength: [description of strength]",
-                    "Improvement: [suggestion for improvement]",
-                    ...
+                  "suggestions": string[]
                   ]
                 }
 
