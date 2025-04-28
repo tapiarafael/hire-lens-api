@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { Resume, resumes } from 'src/drizzle/tables/resumes';
 import { DrizzleDB } from 'src/drizzle/types/drizzle';
@@ -106,6 +106,23 @@ export class ResumeService {
       .returning({
         id: jobs.id,
       });
+
+    const [jobResumeExists] = await this.db
+      .select({
+        id: jobsResumes.id,
+        resumeId: jobsResumes.resumeId,
+        status: jobsResumes.status,
+        createdAt: jobsResumes.createdAt,
+        updatedAt: jobsResumes.updatedAt,
+      })
+      .from(jobsResumes)
+      .where(
+        and(eq(jobsResumes.jobId, job.id), eq(jobsResumes.resumeId, resume.id)),
+      );
+
+    if (jobResumeExists) {
+      return jobResumeExists;
+    }
 
     const [jobResume] = await this.db
       .insert(jobsResumes)

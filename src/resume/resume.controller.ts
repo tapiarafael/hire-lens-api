@@ -36,6 +36,7 @@ export class ResumeController {
   }
   @Post(':id/job')
   analyzeJobResume(@Param('id') id: string, @Body('jobUrl') jobUrl: string) {
+    // This could be done with a DTO and class-validator
     if (!jobUrl || typeof jobUrl !== 'string' || jobUrl.trim() === '') {
       throw new BadRequestException('jobUrl is required');
     }
