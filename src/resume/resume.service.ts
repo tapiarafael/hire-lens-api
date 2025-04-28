@@ -9,6 +9,9 @@ import { ResumeStatus } from './types/resume-status.enum';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import * as pdf from 'pdf-parse';
+import { RESUME_QUEUE } from './processors/resume.processor';
+import { JOB_RESUME_QUEUE } from './processors/job-resume.processor';
+import { jobs, jobsResumes } from 'src/drizzle/schema';
 
 @Injectable()
 export class ResumeService {
@@ -17,8 +20,10 @@ export class ResumeService {
     private readonly storageService: StorageService,
     @Inject(DRIZZLE)
     private readonly db: DrizzleDB,
-    @InjectQueue('RESUME_QUEUE')
+    @InjectQueue(RESUME_QUEUE)
     private readonly resumeQueue: Queue,
+    @InjectQueue(JOB_RESUME_QUEUE)
+    private readonly jobResumeQueue: Queue,
   ) {}
 
   async getResumeById(id: string): Promise<Partial<Resume>> {
@@ -65,5 +70,65 @@ export class ResumeService {
     await this.resumeQueue.add('analyze-resume', { resumeId: data.id });
 
     return data;
+  }
+
+  async analyzeJobResume(resumeId: string, jobUrl: string) {
+    const [resume] = await this.db
+      .select({
+        id: resumes.id,
+      })
+      .from(resumes)
+      .where(eq(resumes.id, resumeId))
+      .limit(1);
+
+    if (!resume?.id) {
+      throw new NotFoundException('Resume not found');
+    }
+
+    // The parser seems not to support LinkedIn job URLs
+    if (jobUrl.includes('linkedin.com')) {
+      throw new NotFoundException('LinkedIn job URLs are not supported');
+    }
+
+    // These queries should be extracted to a repository
+    const [job] = await this.db
+      .insert(jobs)
+      .values({
+        url: jobUrl,
+      })
+      // This is to return the job ID in case of conflict
+      .onConflictDoUpdate({
+        set: {
+          url: jobUrl,
+        },
+        target: jobs.url,
+      })
+      .returning({
+        id: jobs.id,
+      });
+
+    const [jobResume] = await this.db
+      .insert(jobsResumes)
+      .values({
+        jobId: job.id,
+        resumeId: resume.id,
+        status: ResumeStatus.PENDING,
+      })
+      .onConflictDoNothing()
+      .returning({
+        id: jobsResumes.id,
+        jobId: jobsResumes.jobId,
+        resumeId: jobsResumes.resumeId,
+        status: jobsResumes.status,
+        createdAt: jobsResumes.createdAt,
+        updatedAt: jobsResumes.updatedAt,
+      });
+
+    await this.jobResumeQueue.add('analyze-job-resume', {
+      jobId: job.id,
+      resumeId,
+    });
+
+    return jobResume;
   }
 }

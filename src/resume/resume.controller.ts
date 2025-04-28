@@ -1,4 +1,6 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
   Get,
   Param,
@@ -25,5 +27,19 @@ export class ResumeController {
     @UploadedFile(new ResumeFileValidationPipe()) file: Express.Multer.File,
   ) {
     return this.resumeService.analyzeResume(file);
+  }
+
+  @Post(':id/job')
+  analyzeJobResume(@Param('id') id: string, @Body('jobUrl') jobUrl: string) {
+    if (!jobUrl || typeof jobUrl !== 'string' || jobUrl.trim() === '') {
+      throw new BadRequestException('jobUrl is required');
+    }
+
+    const urlPattern = new RegExp('^(http|https)://');
+    if (!urlPattern.test(jobUrl)) {
+      throw new BadRequestException('Invalid job URL format');
+    }
+
+    return this.resumeService.analyzeJobResume(id, jobUrl);
   }
 }
