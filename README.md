@@ -1,99 +1,176 @@
+# HireLens
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="hirelens.png" width="400" alt="HireLens Logo" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h1 align="center">HireLens</h1>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  AI-powered Resume Analyzer and Job Compatibility Matching API<br/>
+  Built with NestJS, Drizzle ORM, BullMQ, and OpenAI/Claude integrations.
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ Overview
 
-## Project setup
+**HireLens** is a backend API designed to help candidates improve their resumes and evaluate their compatibility with job positions.
 
-```bash
-$ npm install
-```
+It supports:
 
-## Compile and run the project
+- Uploading a resume (PDF file)
+- AI-based resume analysis (strengths, weaknesses, suggestions)
+- Fetching suggestions and improvement points
+- Matching a resume against a job description URL
+- Asynchronous job processing via queues (BullMQ)
+- Pluggable storage and AI providers
+- Scalable architecture for production use
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## 🚀 Tech Stack
 
-# production mode
-$ npm run start:prod
-```
+- **NestJS** — Node.js framework
+- **Drizzle ORM** — Database access (PostgreSQL)
+- **BullMQ** — Job queues and background processing
+- **Pino** — Logging
+- **OpenAI** / **Anthropic Claude** — AI providers (pluggable)
+- **Prometheus (optional)** — Metrics-ready
+- **Docker-ready** (optional)
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 📂 Project Structure
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+src/
+├── ai/              # AI service abstraction (OpenAI, Claude, Ollama, etc.)
+├── drizzle/         # Drizzle ORM setup (Postgres)
+├── storage/         # File storage abstraction (local, S3, etc.)
+├── resume/          # Resume module: controllers, services, processors
+├── common/          # Shared types, enums
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 🛠️ Setup
 
-Check out a few resources that may come in handy when working with NestJS:
+### 1. Clone and Install
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+git clone https://github.com/tapiarafael/hire-lens-api.git
+cd hirelens-api
+npm install
+```
 
-## Support
+### 2. Create `.env` file
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# .env
 
-## Stay in touch
+# Application
+NODE_ENV=development
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Database
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/hirelens
+REDIS_URL=localhost
+REDIS_PORT=6379
 
-## License
+# Storage
+STORAGE_PROVIDER=local
+STORAGE_LOCAL_PATH=./storage
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+# AI Provider
+AI_PROVIDER=anthropic # or openai
+AI_API_KEY=your-openai-or-anthropic-api-key
+AI_MAX_TOKENS_DEFAULT=1000
+
+# https://jina.ai/reader/#apiform
+JINA_API_TOKEN=jina-api-token
+```
+
+> **Note**: You can easily switch storage providers or AI providers by changing env vars.
+
+---
+
+## ▶️ Running the Project
+
+### Run Migrations
+
+Before running the project, ensure the database schema is up-to-date by running migrations:
+
+```bash
+npm run drizzle:migrate
+```
+
+### Development
+
+```bash
+npm run start:dev
+```
+
+### Production
+
+```bash
+npm run build
+npm run start:prod
+```
+
+### Test
+
+```bash
+# Unit tests
+npm run test
+
+# Test coverage
+npm run test:cov
+```
+
+---
+
+## 👋 API Endpoints
+
+| Method |          Endpoint          | Description                                |
+| :----: | :------------------------: | :----------------------------------------- |
+|  POST  |         `/resume`          | Uploads a resume (PDF) and starts analysis |
+|  GET   |       `/resume/:id`        | Get resume analysis results                |
+|  POST  |     `/resume/:id/job`      | Analyze resume against a job URL           |
+|  GET   | `/resume/job/:jobResumeId` | Get compatibility results for a job+resume |
+|  GET   |         `/metrics`         | Get application metrics for Prometheus     |
+
+---
+
+## 🧠 Features
+
+- **Resume Analyzer**: Uploads a PDF and uses LLMs to suggest improvements.
+- **Job Compatibility**: Match a resume with a job description scraped from a URL.
+- **Queues**: Background processing of heavy AI tasks via BullMQ.
+- **Storage Abstraction**: Local, S3, etc.
+- **AI Abstraction**: OpenAI, Claude, or custom LLMs.
+- **Logging**: Pino integration for structured logs.
+- **Metrics-Ready**: Easily integrate Prometheus if needed.
+
+---
+
+## 📈 Future Improvements
+
+- Add retry and error handling for queue workers
+- Deploy-ready Docker Compose for local and cloud
+- Auto-scaling for background workers
+- Multi-tenant support
+- Authentication and authorization
+- Rate limiting for API endpoints
+- Caching for frequently accessed data
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+Made with 💻 by Rafael Tapia — [LinkedIn](https://www.linkedin.com/in/rafael-tapia/)
