@@ -29,6 +29,11 @@ export class ResumeController {
     return this.resumeService.analyzeResume(file);
   }
 
+  // Maybe this should be in a different controller or even a different module
+  @Get(':id/job/:jobId')
+  getJobAnalyzis(@Param('jobId') id: string) {
+    return this.resumeService.getJobCompatibility(id);
+  }
   @Post(':id/job')
   analyzeJobResume(@Param('id') id: string, @Body('jobUrl') jobUrl: string) {
     if (!jobUrl || typeof jobUrl !== 'string' || jobUrl.trim() === '') {

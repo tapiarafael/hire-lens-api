@@ -117,7 +117,6 @@ export class ResumeService {
       .onConflictDoNothing()
       .returning({
         id: jobsResumes.id,
-        jobId: jobsResumes.jobId,
         resumeId: jobsResumes.resumeId,
         status: jobsResumes.status,
         createdAt: jobsResumes.createdAt,
@@ -128,6 +127,33 @@ export class ResumeService {
       jobId: job.id,
       resumeId,
     });
+
+    return jobResume;
+  }
+
+  async getJobCompatibility(jobResumeId: string) {
+    const [jobResume] = await this.db
+      .select({
+        id: jobsResumes.id,
+        resumeId: jobsResumes.resumeId,
+        score: jobsResumes.score,
+        suggestions: jobsResumes.suggestions,
+        summary: jobsResumes.summary,
+        status: jobsResumes.status,
+        jobTitle: jobs.title,
+        jobUrl: jobs.url,
+        jobDescription: jobs.description,
+        createdAt: jobsResumes.createdAt,
+        updatedAt: jobsResumes.updatedAt,
+      })
+      .from(jobsResumes)
+      .where(eq(jobsResumes.id, jobResumeId))
+      .innerJoin(jobs, eq(jobs.id, jobsResumes.jobId))
+      .limit(1);
+
+    if (!jobResume) {
+      throw new NotFoundException('Job resume not found');
+    }
 
     return jobResume;
   }
