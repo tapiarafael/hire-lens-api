@@ -34,6 +34,7 @@ export class ResumeController {
   getJobAnalyzis(@Param('jobId') id: string) {
     return this.resumeService.getJobCompatibility(id);
   }
+
   @Post(':id/job')
   analyzeJobResume(@Param('id') id: string, @Body('jobUrl') jobUrl: string) {
     // This could be done with a DTO and class-validator

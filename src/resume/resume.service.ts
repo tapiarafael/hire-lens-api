@@ -8,7 +8,7 @@ import { StorageService } from 'src/storage/storage.service';
 import { ResumeStatus } from './types/resume-status.enum';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import pdf from 'pdf-parse';
+import * as pdf from 'pdf-parse';
 import { RESUME_QUEUE } from './processors/resume.processor';
 import { JOB_RESUME_QUEUE } from './processors/job-resume.processor';
 import { jobs, jobsResumes } from 'src/drizzle/schema';
