@@ -6,6 +6,7 @@ import { ResumeModule } from './resume/resume.module';
 import { LoggerModule } from 'nestjs-pino';
 import { AiModule } from './ai/ai.module';
 import { BullModule } from '@nestjs/bullmq';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { BullModule } from '@nestjs/bullmq';
     StorageModule,
     ResumeModule,
     AiModule,
+    MetricsModule,
   ],
   controllers: [],
   providers: [],

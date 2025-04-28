@@ -47,9 +47,9 @@ It supports:
 src/
 ├── ai/              # AI service abstraction (OpenAI, Claude, Ollama, etc.)
 ├── drizzle/         # Drizzle ORM setup (Postgres)
-├── storage/         # File storage abstraction (local, S3, etc.)
+├── metrics/         # Metrics module for application monitoring
 ├── resume/          # Resume module: controllers, services, processors
-├── common/          # Shared types, enums
+├── storage/         # File storage abstraction (local, S3, etc.)
 ```
 
 ---
@@ -162,6 +162,7 @@ npm run test:cov
 - Authentication and authorization
 - Rate limiting for API endpoints
 - Caching for frequently accessed data
+- SMTP integration for email notifications
 
 ---
 
