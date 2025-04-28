@@ -11,7 +11,9 @@ import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { resumes } from 'src/drizzle/schema';
 import { DrizzleDB } from 'src/drizzle/types/drizzle';
 
-@Processor('RESUME_QUEUE')
+export const RESUME_QUEUE = 'RESUME_QUEUE';
+
+@Processor(RESUME_QUEUE)
 export class ResumeProcessor extends WorkerHost {
   constructor(
     @InjectPinoLogger(ResumeProcessor.name) private readonly logger: PinoLogger,
